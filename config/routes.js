@@ -22,13 +22,26 @@ function register(req, res) {
   creds.password = hash;
   db('users').insert(creds).then(ids => { 
     const id = ids[0];
-    db('users').where({ id }).first().then(user => {
+    db('users').where({ id }).first()
+      .then(user => {
       const token = tokenEngine(user);
       res.status(201).json({message:`You are successfully Registered`, id: user.id, token })
-    }).catch(err => {
+    })
+    .catch(err => {
       res.status(500).json({err:`User has not been Registered.`});
     })
   })
+}
+
+function tokenEngine(user) {
+  constpayload = {
+    username: user.username
+  };
+  const secret = "Why can’t banks keep secrets? There are too many tellers!";
+  const options = {
+    expiresIn: '10h'
+  };
+
 }
 
 function login(req, res) {
