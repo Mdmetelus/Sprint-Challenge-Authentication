@@ -31,22 +31,32 @@ function register(req, res) {
       res.status(500).json({err:`User has not been Registered.`});
     })
   })
-}
+};
 
 function tokenEngine(user) {
   const payload = { username: user.username };
 
   const secret = "Why can’t banks keep secrets? There are too many tellers!";
-  
+
   const options = { expiresIn: '10h' };
 
   return jwt.sign(payload, secret, options);
 
-}
+};
 
 function login(req, res) {
   // implement user login
-}
+  const { username, password } = req.body;
+
+  const creds = { username, password };
+
+  db('users').where({username: creds.username }).first()
+    .then( user => { 
+
+     })
+     .catch(err => res.status(500).json({ message: `Error`, error: err })
+     )
+};
 
 function getJokes(req, res) {
   const requestOptions = {
