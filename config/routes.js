@@ -17,9 +17,10 @@ function register(req, res) {
   // implement user registration
   const creds = req.body;
 
-  const hash = bycrypt.hashSync(creds.password, 16);
+  const hash = bcrypt.hashSync(creds.password, 16);
 
   creds.password = hash;
+
   db('users').insert(creds).then(ids => { 
     const id = ids[0];
     db('users').where({ id }).first()
@@ -34,11 +35,13 @@ function register(req, res) {
 };
 
 function tokenEngine(user) {
-  const payload = { username: user.username };
+  const payload = { username: user.username, password: user.pasword, };
 
-  const secret = "Why can’t banks keep secrets? There are too many tellers!";
+  const secret = process.env.JWT_SECRET;
 
-  const options = { expiresIn: '10h' };
+  const options= {
+    expiresIn: "7d",
+  }
 
   return jwt.sign(payload, secret, options);
 
@@ -65,7 +68,7 @@ function login(req, res) {
 
 function getJokes(req, res) {
   const requestOptions = {
-    headers: { accept: 'application/json' },
+    headers: { accept: 'application/json',  },
   };
 
   axios
