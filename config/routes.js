@@ -34,13 +34,13 @@ function register(req, res) {
 }
 
 function tokenEngine(user) {
-  constpayload = {
-    username: user.username
-  };
+  const payload = { username: user.username };
+
   const secret = "Why can’t banks keep secrets? There are too many tellers!";
-  const options = {
-    expiresIn: '10h'
-  };
+  
+  const options = { expiresIn: '10h' };
+
+  return jwt.sign(payload, secret, options);
 
 }
 
