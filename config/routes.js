@@ -1,4 +1,9 @@
 const axios = require('axios');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const knex = require('knex');
+const knexConfig = require('../knexfile.js');
+const db = knex(knexConfig.development);
 
 const { authenticate } = require('../auth/authenticate');
 
@@ -10,6 +15,20 @@ module.exports = server => {
 
 function register(req, res) {
   // implement user registration
+  const creds = req.body;
+
+  const hash = bycrypt.hashSync(creds.password, 16);
+
+  creds.password = hash;
+  db('users').insert(creds).then(ids => { 
+    const id = ids[0];
+    db('users').where({ id }).first().then(user => {
+      const token = tokenEngine(user);
+      res.status(201).json({message:`You are successfully Registered`, id: user.id, token })
+    }).catch(err => {
+      res.status(500).json({err:`User has not been Registered.`});
+    })
+  })
 }
 
 function login(req, res) {
