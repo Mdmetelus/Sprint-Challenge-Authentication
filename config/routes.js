@@ -52,7 +52,12 @@ function login(req, res) {
 
   db('users').where({username: creds.username }).first()
     .then( user => { 
-
+      if (user && bcrypt.compareSync(creds.password, user.password)) {
+        const token = tokenEngine(user);
+        res.status(200).json({ mesage: `Hello ${user.username}!\n You Have just loged in.`, token });
+      } else {
+        res.status(401).json({ message: `You may not Login!` });
+      }
      })
      .catch(err => res.status(500).json({ message: `Error`, error: err })
      )
