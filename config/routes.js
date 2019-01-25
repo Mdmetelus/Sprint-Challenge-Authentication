@@ -56,10 +56,10 @@ function login(req, res) {
         const token = tokenEngine(user);
         res.status(200).json({ mesage: `Hello ${user.username}!\n You Have just loged in.`, token });
       } else {
-        res.status(401).json({ message: `You may not Login!` });
+        res.status(401).json({ message: `You  are not authorized and may not Login!` });
       }
      })
-     .catch(err => res.status(500).json({ message: `Error`, error: err })
+     .catch(err => res.status(500).json({ message: `Error, You may not login!`, error: err })
      )
 };
 
